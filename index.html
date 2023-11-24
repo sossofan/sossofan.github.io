@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=320, user-scalable=0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta property="og:image" content="og.gif" />
-  <title>SUBLEERUNKER</title>
+  <title>SoSo똥 피하기</title>
   <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
   <style type="text/css">
     @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
-    h5 {
+    .donate {
       color: white;
       text-align: center;
+      font-size: x-small;
     }
     html {
       height: 100%;
@@ -33,6 +35,14 @@
       -moz-user-select: none;
       -ms-user-select: none;
     }
+    .community {
+      margin:auto;
+      display:block;
+    }
+    .notice {
+      padding-top: 3px;
+      width: 100%;
+    }
     .bezel {
       position: absolute;
       top: 50%;
@@ -50,8 +60,15 @@
   <script src="subleerunker.js"></script>
 </head>
 <body>
+  <div class="notice">
+    <p class="donate" onclick="donate()">web3 연동을 위한 bfc 기부<br/>0x2183b4E02d8FA5943D7123F335178cf3E99425F0</p>
+    <button type="button" class="btn btn-dark community" onclick="community()">커뮤니티</button>
+  </div>
   <div class="bezel"></div>
   <script>
+    function community() {
+      window.open("https://discord.gg/dQ6Dbhn6");
+    }
     function donate() {
         const textarea = document.createElement('textarea');
         textarea.textContent = "0x2183b4E02d8FA5943D7123F335178cf3E99425F0";
@@ -160,6 +177,5 @@
       console.log(replayURL);
     });
   </script>
-  <h5 onclick="donate()">web3 연동을 위한 bfc 기부<br/>0x2183b4E02d8FA5943D7123F335178cf3E99425F0</h5>
 </body>
 </html>
