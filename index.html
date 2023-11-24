@@ -9,6 +9,10 @@
   <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
   <style type="text/css">
     @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+    h5 {
+      color: white;
+      text-align: center;
+    }
     html {
       height: 100%;
     }
@@ -48,6 +52,15 @@
 <body>
   <div class="bezel"></div>
   <script>
+    function donate() {
+        const textarea = document.createElement('textarea');
+        textarea.textContent = "0x2183b4E02d8FA5943D7123F335178cf3E99425F0";
+        document.body.append(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+        alert("Copied the text: 0x2183b4E02d8FA5943D7123F335178cf3E99425F0");
+    }
     // Parse querystring.
     function parseQuerystring(querystring) {
       var query = {};
@@ -147,6 +160,6 @@
       console.log(replayURL);
     });
   </script>
-  <script src="ga.js"></script>
+  <h5 onclick="donate()">web3 연동을 위한 bfc 기부<br/>0x2183b4E02d8FA5943D7123F335178cf3E99425F0</h5>
 </body>
 </html>
