@@ -1,0 +1,211 @@
+<!doctype html>
+<html prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=320, user-scalable=0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta property="og:image" content="og.gif" />
+  <title>SoSo똥 피하기</title>
+  <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+    .donate {
+      color: white;
+      text-align: center;
+      font-size: x-small;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+
+      /* Diable selection */
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+    .community {
+      margin:auto;
+      display:block;
+    }
+    .notice {
+      padding-top: 3px;
+      width: 100%;
+    }
+    .bezel {
+      position: absolute;
+      top: 53%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      outline: 1px solid #333;
+    }
+    .spanner{
+      position:absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      display:block;
+      text-align:center;
+      height: 300px;
+      color: #FFF;
+      transform: translateY(-50%);
+      z-index: 1000;
+      visibility: hidden;
+    }
+    .overlay {
+      z-index: 10;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      visibility: hidden;
+      background: rgba(0,0,0,0.8);
+    }
+    .show {
+      visibility: visible;
+    }
+  </style>
+  <script src="lib/jquery-3.2.1.min.js"></script>
+  <script src="lib/pixi-4.5.1.min.js"></script>
+  <script src="lib/classy-1.4.min.js"></script>
+  <script src="lib/seedrandom-2.4.3.min.js"></script>
+  <script src="lib/js.cookie-3.0.0-rc.0.min.js"></script>
+  <script src="godreal.js"></script>
+  <script src="subleerunker.js"></script>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="spanner">
+    <button type="button" class="btn btn-dark" onclick="main()">메인화면</button>
+    <button type="button" class="btn btn-dark" onclick="regame()">다시하기</button>
+  </div>
+  <div class="notice">
+    <button type="button" class="btn btn-dark community" onclick="community()">커뮤니티</button>
+  </div>
+  <div class="bezel"></div>
+  <script>
+    function main() {
+      location.href ="/";
+    }
+    function regame() {
+      location.reload();
+    }
+    function community() {
+      window.open("https://discord.gg/dQ6Dbhn6");
+    }
+    function donate() {
+        const textarea = document.createElement('textarea');
+        textarea.textContent = "0x2183b4E02d8FA5943D7123F335178cf3E99425F0";
+        document.body.append(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+        alert("Copied the text: 0x2183b4E02d8FA5943D7123F335178cf3E99425F0");
+    }
+    // Parse querystring.
+    function parseQuerystring(querystring) {
+      var query = {};
+      var parts = querystring.slice(1).split('&');
+      $.each(parts, function(i, part) {
+        var words = part.split('=');
+        var key = decodeURIComponent(words[0]);
+        var value = decodeURIComponent(words[1] || '');
+        query[key] = value;
+      });
+      return query;
+    }
+    var QUERY = {};
+    $.extend(QUERY, parseQuerystring(location.search));
+    $.extend(QUERY, parseQuerystring(location.hash));
+
+    // Setup context and init debug mode.
+    var ctx = {
+      debug: (QUERY.debug !== undefined),
+      triggerEvents: true,
+      randomSeed: parseInt(QUERY.seed, 16)
+    };
+    if (ctx.debug) {
+      $(document.head).append('<script src="lib/stats-r17.min.js">');
+      var stats = new Stats();
+      stats.flames = stats.addPanel(new Stats.Panel('flames', '#ff8', '#221'));
+      stats.showPanel(0);
+      $(document.body).append(stats.dom);
+    }
+
+    // Disable anti-aliasing.
+    PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
+    // Use WebGL if queried.
+    if (QUERY.webgl !== undefined) {
+      Subleerunker.prototype.rendererClass = PIXI.WebGLRenderer;
+    }
+
+    // // Limit cookie scope.
+    // var cookies = Cookies.withAttributes({
+    //   path: location.pathname,
+    //   secure: true,
+    //   sameSite: 'none'
+    // });
+
+    // Init the game.
+    var game = Subleerunker(ctx);
+    game.elem().appendTo('.bezel');
+    game.watch(window, document, {
+      resize: function(scale) {
+        $(document.body).css({
+          minWidth: this.width * scale,
+          minHeight: this.height * scale
+        });
+      }
+    });
+
+    // Enable stats.js.
+    if (ctx.debug) {
+      function countFlames(game) {
+        var numFlames = 0;
+        $.each(game.children, function(i, child) {
+          if (child instanceof Subleerunker.Flame) numFlames++;
+        });
+        return numFlames;
+      }
+      var before = function(time) { stats.begin(); };
+      var after = function(time) {
+        stats.end();
+        stats.flames.update(countFlames(this), 100);
+      };
+    }
+
+    // Set replay.
+    if (QUERY.replay) {
+      var replay = Replay.decode(QUERY.replay);
+      game.loadReplay(replay);
+    }
+
+    // Run the game.
+    var fps = QUERY.fps && Number(QUERY.fps);
+    game.run(fps, before, after);
+    window.active = true;
+
+    // Report replay URL on console.
+    $(window).on('gameOver', function(e, score, replay) {
+      if (window.console === undefined) {
+        return;
+      }
+      var encodedReplay = Replay.encode(replay);
+      var replayQuerystring = '?replay=' + encodeURIComponent(encodedReplay);
+      var replayURL = location.href.replace(/(\?.*)?$/, replayQuerystring);
+      console.log(replayURL);
+    });
+  </script>
+</body>
+</html>

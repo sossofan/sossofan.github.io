@@ -37,9 +37,9 @@ var Subleerunker = Game.$extend({
       current: 0,
       prime: Number(
         // Fallback with deprecated cookie names.
-        cookies.get('prime-score') ||
-        cookies.get('best-score') ||
-        cookies.get('my_best_score') ||
+        // cookies.get('prime-score') ||
+        // cookies.get('best-score') ||
+        // cookies.get('my_best_score') ||
       0),
       champion: {
         score: null,
@@ -381,18 +381,19 @@ var Subleerunker = Game.$extend({
       var token = String(data.token);
       this.scores.champion.token = token;
       this.scores.champion.authorized = true;
-      if (data.expiresAt && cookies.get('champion-token') !== token) {
-        cookies.set('champion-token', token, {
-          expires: new Date(data.expiresAt),
-        });
-      }
+      // if (data.expiresAt && cookies.get('champion-token') !== token) {
+      //   cookies.set('champion-token', token, {
+      //     expires: new Date(data.expiresAt),
+      //   });
+      // }
     } else {
       this.scores.champion.authorized = Boolean(data.authorized);
     }
 
-    var cachedName = cookies.get('champion-name');
+    // var cachedName = cookies.get('champion-name');
+    var cachedName = '';
     if (this.scores.champion.authorized) {
-      cookies.set('champion-name', name, {expires: Infinity});
+      // cookies.set('champion-name', name, {expires: Infinity});
     }
 
     this.renderScores();
@@ -407,10 +408,10 @@ var Subleerunker = Game.$extend({
 
   _authChampion: function(headers) {
     headers = $.extend({}, headers);
-    var championToken = cookies.get('champion-token');
-    if (championToken) {
-      headers['Authorization'] = 'Basic ' + btoa(':' + championToken);
-    }
+    // var championToken = cookies.get('champion-token');
+    // if (championToken) {
+    //   headers['Authorization'] = 'Basic ' + btoa(':' + championToken);
+    // }
     return headers;
   },
 
@@ -438,7 +439,8 @@ var Subleerunker = Game.$extend({
       }
 
       // Predict a success.
-      var name = cookies.get('champion-name') || '';
+      // var name = cookies.get('champion-name') || '';
+      var name = '';
       this._championReceived({
         score: this.scores.current,
         name: name,
@@ -491,9 +493,9 @@ var Subleerunker = Game.$extend({
       if (this.scores.prime < this.scores.current) {
         this.scores.prime = this.scores.current;
         // Remember new prime score.
-        cookies.set('prime-score', this.scores.prime, {
-          expires: 2592000  // expires in 30 days.
-        });
+        // cookies.set('prime-score', this.scores.prime, {
+        //   expires: 2592000  // expires in 30 days.
+        // });
       }
 
       this.beatChampion();
@@ -503,6 +505,33 @@ var Subleerunker = Game.$extend({
       // Trigger custom event to track the score by outside.
       var args  = [this.scores.current, Replay.clone(this.replay)];
       $(window).trigger('gameOver', args);
+      window.end_score = this.scores.current;
+      var encodedReplay = Replay.encode(Replay.clone(this.replay));
+      var replayQuerystring = encodeURIComponent(encodedReplay);
+      window.replayQuerystring = replayQuerystring;
+
+      try{
+        let div = document.getElementById('score');
+        div.innerHTML = "score: " + this.scores.current;
+      }catch(e){
+        // console.log(e);
+      }
+      window.active = false;
+      setTimeout(()=>{
+        $("div.spanner").addClass("show");
+        $("div.overlay").addClass("show");
+
+        if(window.QUERY && window.QUERY.log){
+          try{
+            document.getElementsByTagName('button')[0].style="display: none"
+            document.getElementsByTagName('button')[1].style="display: none"
+            if(window.QUERY.topScore != this.scores.current){
+              alert("가짜 기록 발견. 커뮤니티로 제보해주세요.");
+            }
+          }catch(e){
+          }
+        }
+      }, 1000);
     }
   },
 
@@ -544,6 +573,10 @@ var Subleerunker = Game.$extend({
       this.ctx.random = new Math.seedrandom(this.replay.randomSeed);
     } else {
       var randomSeed = this.ctx.randomSeed || makeRandomSeed();
+      if (window.randomSeed) {
+        randomSeed = window.randomSeed;
+        // console.log('randomSeed: ' + randomSeed);
+      }
       this.ctx.random = new Math.seedrandom(randomSeed);
       this.replay = new Replay(randomSeed);
     }

@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html prefix="og: http://ogp.me/ns#">
 <head>
@@ -45,10 +46,34 @@
     }
     .bezel {
       position: absolute;
-      top: 50%;
+      top: 53%;
       left: 50%;
       transform: translate(-50%, -50%);
       outline: 1px solid #333;
+    }
+    .spanner{
+      position:absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      display:block;
+      text-align:center;
+      height: 300px;
+      color: #FFF;
+      transform: translateY(-50%);
+      z-index: 1000;
+      visibility: hidden;
+    }
+    .overlay {
+      z-index: 10;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      visibility: hidden;
+      background: rgba(0,0,0,0.8);
+    }
+    .show {
+      visibility: visible;
     }
   </style>
   <script src="lib/jquery-3.2.1.min.js"></script>
@@ -58,124 +83,52 @@
   <script src="lib/js.cookie-3.0.0-rc.0.min.js"></script>
   <script src="godreal.js"></script>
   <script src="subleerunker.js"></script>
+  <script src="web3.js"></script>
 </head>
 <body>
-  <div class="notice">
-    <p class="donate" onclick="donate()">web3 연동을 위한 bfc 기부<br/>0x2183b4E02d8FA5943D7123F335178cf3E99425F0</p>
-    <button type="button" class="btn btn-dark community" onclick="community()">커뮤니티</button>
+  <div class="overlay"></div>
+  <div class="spanner">
+    <button type="button" class="btn btn-dark" onclick="wallet()">지갑 연동</button>
+    <button type="button" class="btn btn-dark" onclick="web()">지갑 없이</button>
+    <br/><br/>
+    <button type="button" class="btn btn-dark" onclick="community()">커뮤니티</button>
+    <button type="button" class="btn btn-dark" onclick="score()">점수판</button>
   </div>
   <div class="bezel"></div>
   <script>
-    function community() {
-      window.open("https://discord.gg/dQ6Dbhn6");
-    }
-    function donate() {
-        const textarea = document.createElement('textarea');
-        textarea.textContent = "0x2183b4E02d8FA5943D7123F335178cf3E99425F0";
-        document.body.append(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        textarea.remove();
-        alert("Copied the text: 0x2183b4E02d8FA5943D7123F335178cf3E99425F0");
-    }
-    // Parse querystring.
-    function parseQuerystring(querystring) {
-      var query = {};
-      var parts = querystring.slice(1).split('&');
-      $.each(parts, function(i, part) {
-        var words = part.split('=');
-        var key = decodeURIComponent(words[0]);
-        var value = decodeURIComponent(words[1] || '');
-        query[key] = value;
-      });
-      return query;
-    }
-    var QUERY = {};
-    $.extend(QUERY, parseQuerystring(location.search));
-    $.extend(QUERY, parseQuerystring(location.hash));
+      $("div.spanner").addClass("show");
+      $("div.overlay").addClass("show");
 
-    // Setup context and init debug mode.
-    var ctx = {
-      debug: (QUERY.debug !== undefined),
-      triggerEvents: true,
-      randomSeed: parseInt(QUERY.seed, 16)
-    };
-    if (ctx.debug) {
-      $(document.head).append('<script src="lib/stats-r17.min.js">');
-      var stats = new Stats();
-      stats.flames = stats.addPanel(new Stats.Panel('flames', '#ff8', '#221'));
-      stats.showPanel(0);
-      $(document.body).append(stats.dom);
-    }
-
-    // Disable anti-aliasing.
-    PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-
-    // Use WebGL if queried.
-    if (QUERY.webgl !== undefined) {
-      Subleerunker.prototype.rendererClass = PIXI.WebGLRenderer;
-    }
-
-    // Limit cookie scope.
-    var cookies = Cookies.withAttributes({
-      path: location.pathname,
-      secure: true,
-      sameSite: 'none'
-    });
-
-    // Set a champion URL.
-    if (/^https:\/\/sublee.github.io/.exec(location.href)) {
-      ctx.championURL = 'https://subleerunker-166907.appspot.com/champion';
-    }
-
-    // Init the game.
-    var game = Subleerunker(ctx);
-    game.elem().appendTo('.bezel');
-    game.watch(window, document, {
-      resize: function(scale) {
-        $(document.body).css({
-          minWidth: this.width * scale,
-          minHeight: this.height * scale
+      async function wallet() {
+        if (window.ethereum === undefined) {
+          alert("지갑이 설치되어 있지 않습니다.");
+          return;
+        }
+        var wallet = await ethereum.request({ method: 'eth_requestAccounts', params: [] }).catch((err) => {
+          alert("wallet:" + JSON.stringify(err));
+          window.e=err;
         });
-      }
-    });
-
-    // Enable stats.js.
-    if (ctx.debug) {
-      function countFlames(game) {
-        var numFlames = 0;
-        $.each(game.children, function(i, child) {
-          if (child instanceof Subleerunker.Flame) numFlames++;
+        if(window.e){
+          return;
+        }
+        await window.ethereum.request({method: 'wallet_switchEthereumChain', params: [{ chainId: window.chainId }],}).catch((err) => {
+          alert("wallet change network error:" + JSON.stringify(err));
+          window.e=err;
         });
-        return numFlames;
+        if(window.e){
+          return;
+        }
+        location.href = "web3.html"
       }
-      var before = function(time) { stats.begin(); };
-      var after = function(time) {
-        stats.end();
-        stats.flames.update(countFlames(this), 100);
-      };
-    }
-
-    // Set replay.
-    if (QUERY.replay) {
-      var replay = Replay.decode(QUERY.replay);
-      game.loadReplay(replay);
-    }
-
-    // Run the game.
-    var fps = QUERY.fps && Number(QUERY.fps);
-    game.run(fps, before, after);
-
-    // Report replay URL on console.
-    $(window).on('gameOver', function(e, score, replay) {
-      if (window.console === undefined) {
-        return;
+      function web() {
+        window.location.href = "web.html";
       }
-      var encodedReplay = Replay.encode(replay);
-      var replayQuerystring = '?replay=' + encodeURIComponent(encodedReplay);
-      var replayURL = location.href.replace(/(\?.*)?$/, replayQuerystring);
-      console.log(replayURL);
-    });
+      function community() {
+        window.open("https://discord.gg/dQ6Dbhn6");
+      }
+      function score() {
+        location.href ="/score.html";
+      }
   </script>
 </body>
 </html>

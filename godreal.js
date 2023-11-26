@@ -575,7 +575,7 @@ var Game = GameObject.$extend({
   },
 
   handlesKey: function(e) {
-    return (document.activeElement === document.body);
+    return window.active && (document.activeElement === document.body);
   },
 
   handlesTouch: function(e) {
