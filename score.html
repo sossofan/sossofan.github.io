@@ -85,6 +85,13 @@
   <script src="subleerunker.js?version=web3.1"></script>
   <script src="web3.js?version=web3.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/web3@4.2.2/dist/web3.min.js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-HRKG3KTWF5');
+  </script>
 </head>
 <body>
   <div class="overlay"></div>
@@ -117,22 +124,21 @@
 	  $(window).on("load", async function() {
 		// scoreboard
 		if (window.ethereum === undefined) {
-		  alert("지갑이 설치되어 있지 않습니다. 지갑 설치 후 다시 접속해주세요.");
-		  history.back();
+			window.user = '0x1234';
+			window.web3js = new Web3('https://public-01.mainnet.thebifrost.io/rpc');
+		} else {
+			var wallet = await ethereum.request({ method: 'eth_requestAccounts', params: [] }).catch((err) => {
+				alert("wallet:" + JSON.stringify(err));
+				history.back();
+			});
+			await window.ethereum.request({method: 'wallet_switchEthereumChain', params: [{ chainId: window.chainId }],}).catch((err) => {
+				alert("wallet change network error:" + JSON.stringify(err));
+				history.back();
+			});
+			window.user = wallet[0];
+			window.web3js = new Web3(web3.currentProvider);
 		}
-		var wallet = await ethereum.request({ method: 'eth_requestAccounts', params: [] }).catch((err) => {
-		  alert("wallet:" + JSON.stringify(err));
-		  history.back();
-		});
 
-
-		await window.ethereum.request({method: 'wallet_switchEthereumChain', params: [{ chainId: window.chainId }],}).catch((err) => {
-		  alert("wallet change network error:" + JSON.stringify(err));
-		  history.back();
-		});
-
-		window.user = wallet[0];
-		window.web3js = new Web3(web3.currentProvider);
 		window.contract = new web3js.eth.Contract(window.abi, window.contractAddress);
 
 		var count = await contract.methods.getPlayersCount().call();
