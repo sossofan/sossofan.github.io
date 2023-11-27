@@ -1,142 +1,155 @@
-
 <!doctype html>
 <html prefix="og: http://ogp.me/ns#">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=320, user-scalable=0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta property="og:image" content="og.gif" />
-  <title>SoSo똥 피하기</title>
-  <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-  <style type="text/css">
-    @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
-    .donate {
-      color: white;
-      text-align: center;
-      font-size: x-small;
-    }
-    html {
-      height: 100%;
-    }
-    body {
-      position: relative;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=320, user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta property="og:image" content="og.gif" />
+    <title>SoSo똥 피하기</title>
+    <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
 
-      /* Diable selection */
-      user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-    }
-    .community {
-      margin:auto;
-      display:block;
-    }
-    .notice {
-      padding-top: 3px;
-      width: 100%;
-    }
-    .bezel {
-      position: absolute;
-      top: 53%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      outline: 1px solid #333;
-    }
-    .spanner{
-      position:absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      display:block;
-      text-align:center;
-      height: 300px;
-      color: #FFF;
-      transform: translateY(-50%);
-      z-index: 1000;
-      visibility: hidden;
-    }
-    .overlay {
-      z-index: 10;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      visibility: hidden;
-      background: rgba(0,0,0,0.8);
-    }
-    .show {
-      visibility: visible;
-    }
-  </style>
-  <script src="lib/jquery-3.2.1.min.js"></script>
-  <script src="lib/pixi-4.5.1.min.js"></script>
-  <script src="lib/classy-1.4.min.js"></script>
-  <script src="lib/seedrandom-2.4.3.min.js"></script>
-  <script src="lib/js.cookie-3.0.0-rc.0.min.js"></script>
-  <script src="godreal.js?version=web3.1"></script>
-  <script src="subleerunker.js?version=web3.1"></script>
-  <script src="web3.js?version=web3.1"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HRKG3KTWF5"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+      .donate {
+        color: white;
+        text-align: center;
+        font-size: x-small;
+      }
 
-    gtag('config', 'G-HRKG3KTWF5');
-  </script>
-</head>
-<body>
-  <div class="overlay"></div>
-  <div class="spanner">
-    <button type="button" class="btn btn-dark" onclick="wallet()">지갑 연동</button>
-    <button type="button" class="btn btn-dark" onclick="web()">지갑 없이</button>
-    <br/><br/>
-    <button type="button" class="btn btn-dark" onclick="community()">커뮤니티</button>
-    <button type="button" class="btn btn-dark" onclick="score()">점수판</button>
-  </div>
-  <div class="bezel"></div>
-  <script>
+      html {
+        height: 100%;
+      }
+
+      body {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        /* Diable selection */
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+
+      .community {
+        margin: auto;
+        display: block;
+      }
+
+      .notice {
+        padding-top: 3px;
+        width: 100%;
+      }
+
+      .bezel {
+        position: absolute;
+        top: 53%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        outline: 1px solid #333;
+      }
+
+      .spanner {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        display: block;
+        text-align: center;
+        height: 300px;
+        color: #FFF;
+        transform: translateY(-50%);
+        z-index: 1000;
+        visibility: hidden;
+      }
+
+      .overlay {
+        z-index: 10;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      .show {
+        visibility: visible;
+      }
+    </style>
+    <script src="lib/jquery-3.2.1.min.js"></script>
+    <script src="lib/pixi-4.5.1.min.js"></script>
+    <script src="lib/classy-1.4.min.js"></script>
+    <script src="lib/seedrandom-2.4.3.min.js"></script>
+    <script src="lib/js.cookie-3.0.0-rc.0.min.js"></script>
+    <script src="godreal.js?version=web3.1"></script>
+    <script src="subleerunker.js?version=web3.1"></script>
+    <script src="web3.js?version=web3.1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HRKG3KTWF5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-HRKG3KTWF5');
+    </script>
+  </head>
+  <body>
+    <div class="overlay"></div>
+    <div class="spanner"><button type="button" class="btn btn-dark" onclick="wallet()">지갑 연동</button><button type="button" class="btn btn-dark" onclick="web()">지갑 없이</button><br /><br /><button type="button" class="btn btn-dark" onclick="community()">커뮤니티</button><button type="button" class="btn btn-dark" onclick="score()">점수판</button></div>
+    <div class="bezel"></div>
+    <script>
       $("div.spanner").addClass("show");
       $("div.overlay").addClass("show");
-
       async function wallet() {
         if (window.ethereum === undefined) {
           alert("지갑이 설치되어 있지 않습니다.");
           return;
         }
-        var wallet = await ethereum.request({ method: 'eth_requestAccounts', params: [] }).catch((err) => {
+        var wallet = await ethereum.request({
+          method: 'eth_requestAccounts',
+          params: []
+        }).catch((err) => {
           alert("wallet:" + JSON.stringify(err));
-          window.e=err;
+          window.e = err;
         });
-        if(window.e){
+        if (window.e) {
           return;
         }
-        await window.ethereum.request({method: 'wallet_switchEthereumChain', params: [{ chainId: window.chainId }],}).catch((err) => {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{
+            chainId: window.chainId
+          }],
+        }).catch((err) => {
           alert("wallet change network error:" + JSON.stringify(err));
-          window.e=err;
+          window.e = err;
         });
-        if(window.e){
+        if (window.e) {
           return;
         }
         location.href = "web3.html"
       }
+
       function web() {
         window.location.href = "web.html";
       }
+
       function community() {
         window.open("https://discord.gg/dQ6Dbhn6");
       }
+
       function score() {
-        location.href ="/score.html";
+        location.href = "/score.html";
       }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
