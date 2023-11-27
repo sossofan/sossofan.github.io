@@ -88,9 +88,9 @@
     <script src="lib/classy-1.4.min.js"></script>
     <script src="lib/seedrandom-2.4.3.min.js"></script>
     <script src="lib/js.cookie-3.0.0-rc.0.min.js"></script>
-    <script src="godreal.js?version=web3.1"></script>
-    <script src="subleerunker.js?version=web3.1"></script>
-    <script src="web3.js?version=web3.1"></script>
+    <script src="godreal.js?version=web3.2"></script>
+    <script src="subleerunker.js?version=web3.2"></script>
+    <script src="web3.js?version=web3.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@4.2.2/dist/web3.min.js"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -168,6 +168,7 @@
               topScore: parseInt(player.topScore),
               log: player.log,
               lastPlayed: parseInt(player.lastPlayed),
+              isPlayer: player.isPlayer
             });
           }
         }
@@ -176,6 +177,9 @@
         });
         var table = document.getElementById("scoreboard");
         for (var i = 0; i < scoreboard.length; i++) {
+          if (scoreboard[i].isPlayer == false) {
+            continue;
+          }
           var row = table.insertRow(-1);
           var cell1 = row.insertCell(0);
           var cell2 = row.insertCell(1);
