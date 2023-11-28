@@ -81,6 +81,13 @@
 
       .show {
         visibility: visible;
+        height: 67%;
+        padding: 10px;
+      }
+
+      .scorediv {
+        height: 67%;
+        overflow: auto;
       }
     </style>
     <script src="lib/jquery-3.2.1.min.js"></script>
@@ -106,17 +113,20 @@
     <div class="overlay"></div>
     <div class="spanner">
       <p>scoreboard</p>
-      <table class="table" id="scoreboard">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">ID</th>
-            <th scope="col">Score</th>
-            <th scope="col">Replay</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table><br /><br /><button type="button" class="btn btn-dark" onclick="back()">뒤로가기</button>
+      <div class="scorediv">
+        <table class="table" id="scoreboard">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">ID</th>
+              <th scope="col">Score</th>
+              <th scope="col">Replay</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn btn-dark" onclick="back()">뒤로가기</button>
     </div>
     <div class="bezel"></div>
     <script>
@@ -175,6 +185,7 @@
         scoreboard.sort(function(a, b) {
           return b.topScore - a.topScore;
         });
+        scoreboard.push(...scoreboard)
         var table = document.getElementById("scoreboard");
         for (var i = 0; i < scoreboard.length; i++) {
           if (scoreboard[i].isPlayer == false) {
@@ -202,7 +213,8 @@
             cell4.style.fontWeight = "bold";
           }
           cell1.innerHTML = i + 1;
-          cell2.innerHTML = rename;
+          // cell2.innerHTML = rename;
+          cell2.innerHTML = "<a href='https://explorer.mainnet.thebifrost.io/address/" + scoreboard[i].player + "' target='_blank'>" + rename + "</a>";
           cell3.innerHTML = scoreboard[i].topScore;
           cell4.innerHTML = "<a href='/web3.html?player=" + scoreboard[i].player + "&lastPlayed=" + scoreboard[i].lastPlayed + "&topScore=" + scoreboard[i].topScore + "&log=" + scoreboard[i].log + "'>view</a>";
         }
