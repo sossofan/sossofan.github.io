@@ -124,15 +124,40 @@
         if (window.e) {
           return;
         }
+        // await window.ethereum.request({
+        //   method: 'wallet_switchEthereumChain',
+        //   params: [{
+        //     chainId: window.chainId
+        //   }],
+        // }).catch((err) => {
+        //   alert("wallet change network error:" + JSON.stringify(err));
+        //   window.e = err;
+        // });
+
         await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{
-            chainId: window.chainId
-          }],
-        }).catch((err) => {
-          alert("wallet change network error:" + JSON.stringify(err));
-          window.e = err;
-        });
+            "method": "wallet_addEthereumChain",
+            "params": [
+              {
+                "chainId": "0xbfc",
+                "chainName": "Bifrost Mainnet",
+                "rpcUrls": [
+                  "https://public-01.mainnet.thebifrost.io/rpc"
+                ],
+                "nativeCurrency": {
+                  "name": "BFC",
+                  "symbol": "BFC",
+                  "decimals": 18
+                },
+                "blockExplorerUrls": [
+                  "https://explorer.mainnet.bifrostnetwork.com/"
+                ]
+              }
+            ]
+          }).catch((err) => {
+            alert("wallet change network error:" + JSON.stringify(err));
+            window.e = err;
+          });
+
         if (window.e) {
           return;
         }
