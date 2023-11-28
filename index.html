@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=320, user-scalable=0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta property="og:image" content="og.gif" />
-    <title>SoSo똥 피하기</title>
+    <title>SoSo World</title>
     <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <style type="text/css">
@@ -68,6 +68,7 @@
         transform: translateY(-50%);
         z-index: 1000;
         visibility: hidden;
+        padding: 10px;
       }
 
       .overlay {
@@ -104,7 +105,12 @@
   </head>
   <body>
     <div class="overlay"></div>
-    <div class="spanner"><button type="button" class="btn btn-dark" onclick="wallet()">지갑 연동</button><button type="button" class="btn btn-dark" onclick="web()">지갑 없이</button><br /><br /><button type="button" class="btn btn-dark" onclick="community()">커뮤니티</button><button type="button" class="btn btn-dark" onclick="score()">점수판</button></div>
+    <div class="spanner">
+      <p>준비물: 웹지갑, 100BFC 가스비BFC</p>
+      <button type="button" class="btn btn-dark" onclick="wallet()">지갑 연동</button>
+      <button type="button" class="btn btn-dark" onclick="web()">지갑 없이</button><br />
+      <br /><button type="button" class="btn btn-dark" onclick="community()">커뮤니티</button>
+      <button type="button" class="btn btn-dark" onclick="score()">점수판</button></div>
     <div class="bezel"></div>
     <script>
       $("div.spanner").addClass("show");
