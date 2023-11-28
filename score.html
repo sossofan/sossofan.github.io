@@ -185,7 +185,6 @@
         scoreboard.sort(function(a, b) {
           return b.topScore - a.topScore;
         });
-        scoreboard.push(...scoreboard)
         var table = document.getElementById("scoreboard");
         for (var i = 0; i < scoreboard.length; i++) {
           if (scoreboard[i].isPlayer == false) {
@@ -216,7 +215,7 @@
           // cell2.innerHTML = rename;
           cell2.innerHTML = "<a href='https://explorer.mainnet.thebifrost.io/address/" + scoreboard[i].player + "' target='_blank'>" + rename + "</a>";
           cell3.innerHTML = scoreboard[i].topScore;
-          cell4.innerHTML = "<a href='/web3.html?player=" + scoreboard[i].player + "&lastPlayed=" + scoreboard[i].lastPlayed + "&topScore=" + scoreboard[i].topScore + "&log=" + scoreboard[i].log + "'>view</a>";
+          cell4.innerHTML = "<a href='/web3.html?player=" + scoreboard[i].player + "&lastPlayed=" + scoreboard[i].lastPlayed + "&topScore=" + scoreboard[i].topScore + "&log=" + encodeURIComponent(decodeURIComponent(scoreboard[i].log)) + "'>view</a>";
         }
       })
     </script>
