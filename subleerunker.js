@@ -550,7 +550,7 @@ var Subleerunker = Game.$extend({
   },
 
   startGameplay: function() {
-    gtag('event', 'gamestart', { 'type': window.types, 'user': window.user });
+    gtag('event', 'gamestart', { 'type': window.types, 'user': 'user' + window.user });
     // Reset frame because the flame spawner depends on frame numbers.
     this.frame = 0;
 
