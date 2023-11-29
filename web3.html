@@ -147,29 +147,33 @@
           //   alert("wallet change network error:" + JSON.stringify(err));
           //   location.href = "/";
           // });
-          await window.ethereum.request({
-            "method": "wallet_addEthereumChain",
-            "params": [
-              {
-                "chainId": "0xbfc",
-                "chainName": "Bifrost Mainnet",
-                "rpcUrls": [
-                  "https://public-01.mainnet.thebifrost.io/rpc"
-                ],
-                "nativeCurrency": {
-                  "name": "BFC",
-                  "symbol": "BFC",
-                  "decimals": 18
-                },
-                "blockExplorerUrls": [
-                  "https://explorer.mainnet.bifrostnetwork.com/"
-                ]
-              }
-            ]
-          }).catch((err) => {
-            alert("wallet change network error:" + JSON.stringify(err));
-            location.href = "/";
-          });
+          if ((await window.ethereum.request({ method: 'eth_chainId' })) == '0xbfc') {
+            // nothing
+          } else {
+            await window.ethereum.request({
+              "method": "wallet_addEthereumChain",
+              "params": [
+                {
+                  "chainId": "0xbfc",
+                  "chainName": "Bifrost Mainnet",
+                  "rpcUrls": [
+                    "https://public-01.mainnet.thebifrost.io/rpc"
+                  ],
+                  "nativeCurrency": {
+                    "name": "BFC",
+                    "symbol": "BFC",
+                    "decimals": 18
+                  },
+                  "blockExplorerUrls": [
+                    "https://explorer.mainnet.bifrostnetwork.com/"
+                  ]
+                }
+              ]
+            }).catch((err) => {
+              alert("wallet change network error:" + JSON.stringify(err));
+              location.href = "/";
+            });
+          }
 
 
           window.user = wallet[0];
