@@ -188,8 +188,10 @@
         });
         var table = document.getElementById("scoreboard");
         for (var i = 0; i < scoreboard.length; i++) {
-          if (scoreboard[i].isPlayer == false) {
-            continue;
+          if (scoreboard[i].player.toLowerCase() != window.user.toLowerCase()) {
+            if (scoreboard[i].isPlayer == false) {
+              continue;
+            }
           }
           var row = table.insertRow(-1);
           var cell1 = row.insertCell(0);
@@ -198,14 +200,14 @@
           var cell4 = row.insertCell(3);
           var rename = scoreboard[i].player.substr(2, 6) + "..." + scoreboard[i].player.substr(-4);
           if (scoreboard[i].player.toLowerCase() == window.user.toLowerCase()) {
-            cell1.style.color = "red";
-            cell2.style.color = "red";
-            cell3.style.color = "red";
-            cell4.style.color = "red";
-            cell1.style.background = "pink";
-            cell2.style.background = "pink";
-            cell3.style.background = "pink";
-            cell4.style.background = "pink";
+            // cell1.style.color = "green";
+            // cell2.style.color = "green";
+            // cell3.style.color = "green";
+            // cell4.style.color = "green";
+            cell1.style.background = "#e9ffa5c4";
+            cell2.style.background = "#e9ffa5c4";
+            cell3.style.background = "#e9ffa5c4";
+            cell4.style.background = "#e9ffa5c4";
             // bold
             cell1.style.fontWeight = "bold";
             cell2.style.fontWeight = "bold";
